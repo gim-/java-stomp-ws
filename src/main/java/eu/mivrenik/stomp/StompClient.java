@@ -43,208 +43,208 @@ import com.neovisionaries.ws.client.WebSocketState;
  *
  */
 public class StompClient {
-	private static final String STOMP_VERSION = "1.2";
-	private final Map<Integer, StompSubscription> subscriptions = new HashMap<>();
-	private WebSocket webSocket;
-	private boolean stompConnected;
+    private static final String STOMP_VERSION = "1.2";
+    private final Map<Integer, StompSubscription> subscriptions = new HashMap<>();
+    private WebSocket webSocket;
+    private boolean stompConnected;
 
-	public StompClient(String url) throws IOException {
-		this.webSocket = new WebSocketFactory().createSocket(url);
-		this.webSocket.addListener(webSocketListener);
-	}
+    public StompClient(String url) throws IOException {
+        this.webSocket = new WebSocketFactory().createSocket(url);
+        this.webSocket.addListener(webSocketListener);
+    }
 
-	public void connect() throws WebSocketException, IOException {
-		if (webSocket.getState() != WebSocketState.CREATED) {
-			webSocket = webSocket.recreate();
-		}
-		webSocket.connect();
-		connectStomp();
-	}
+    public void connect() throws WebSocketException, IOException {
+        if (webSocket.getState() != WebSocketState.CREATED) {
+            webSocket = webSocket.recreate();
+        }
+        webSocket.connect();
+        connectStomp();
+    }
 
-	protected void connectStomp() {
-		if (stompConnected)
-			return;
-		Map<String, String> headers = new HashMap<>();
-		headers.put(StompHeader.ACCEPT_VERSION.toString(), STOMP_VERSION);
-		headers.put(StompHeader.HOST.toString(), webSocket.getURI().getHost());
-		webSocket.sendText(new StompFrame(StompCommand.CONNECT, headers).toString());
-	}
+    protected void connectStomp() {
+        if (stompConnected)
+            return;
+        Map<String, String> headers = new HashMap<>();
+        headers.put(StompHeader.ACCEPT_VERSION.toString(), STOMP_VERSION);
+        headers.put(StompHeader.HOST.toString(), webSocket.getURI().getHost());
+        webSocket.sendText(new StompFrame(StompCommand.CONNECT, headers).toString());
+    }
 
-	public void disconnect() {
-		disconnectStomp();
-		webSocket.disconnect();
-	}
+    public void disconnect() {
+        disconnectStomp();
+        webSocket.disconnect();
+    }
 
-	protected void disconnectStomp() {
-		if (!stompConnected)
-			return;
+    protected void disconnectStomp() {
+        if (!stompConnected)
+            return;
 
-		webSocket.sendText(new StompFrame(StompCommand.DISCONNECT).toString());
-	}
+        webSocket.sendText(new StompFrame(StompCommand.DISCONNECT).toString());
+    }
 
-	public boolean isConnected() {
-		return stompConnected;
-	}
+    public boolean isConnected() {
+        return stompConnected;
+    }
 
-	public void send(String destination, String message) {
-		send(destination, message, null);
-	}
+    public void send(String destination, String message) {
+        send(destination, message, null);
+    }
 
-	public void send(String destination, String message, Map<String, String> headers) {
-		if (headers == null)
-			headers = new HashMap<>();
+    public void send(String destination, String message, Map<String, String> headers) {
+        if (headers == null)
+            headers = new HashMap<>();
 
-		headers.put(StompHeader.DESTINATION.toString(), destination);
-		webSocket.sendText(new StompFrame(StompCommand.SEND, headers, message).toString());
-	}
+        headers.put(StompHeader.DESTINATION.toString(), destination);
+        webSocket.sendText(new StompFrame(StompCommand.SEND, headers, message).toString());
+    }
 
-	public StompSubscription subscribe(String destination, StompMessageListener listener) {
-		StompSubscription subscription = new StompSubscription(UUID.randomUUID().hashCode(), destination, listener);
-		Map<String, String> headers = new HashMap<>();
-		headers.put(StompHeader.ID.toString(), String.valueOf(subscription.getId()));
-		headers.put(StompHeader.DESTINATION.toString(), subscription.getDestination());
+    public StompSubscription subscribe(String destination, StompMessageListener listener) {
+        StompSubscription subscription = new StompSubscription(UUID.randomUUID().hashCode(), destination, listener);
+        Map<String, String> headers = new HashMap<>();
+        headers.put(StompHeader.ID.toString(), String.valueOf(subscription.getId()));
+        headers.put(StompHeader.DESTINATION.toString(), subscription.getDestination());
 
-		webSocket.sendText(new StompFrame(StompCommand.SUBSCRIBE, headers).toString());
-		subscriptions.put(subscription.getId(), subscription);
-		return subscription;
-	}
+        webSocket.sendText(new StompFrame(StompCommand.SUBSCRIBE, headers).toString());
+        subscriptions.put(subscription.getId(), subscription);
+        return subscription;
+    }
 
-	public void unsubscribe(StompSubscription subscription) {
-		Map<String, String> headers = new HashMap<>();
-		headers.put(StompHeader.ID.toString(), String.valueOf(subscription.getId()));
-		webSocket.sendText(new StompFrame(StompCommand.UNSUBSCRIBE, headers).toString());
-		subscriptions.remove(subscription.getId());
-	}
+    public void unsubscribe(StompSubscription subscription) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(StompHeader.ID.toString(), String.valueOf(subscription.getId()));
+        webSocket.sendText(new StompFrame(StompCommand.UNSUBSCRIBE, headers).toString());
+        subscriptions.remove(subscription.getId());
+    }
 
-	public void unsubscribeAll(String destination) {
-		for (StompSubscription s : subscriptions.values())
-			if (s.getDestination().equals(destination))
-				unsubscribe(s);
-	}
+    public void unsubscribeAll(String destination) {
+        for (StompSubscription s : subscriptions.values())
+            if (s.getDestination().equals(destination))
+                unsubscribe(s);
+    }
 
-	private final WebSocketListener webSocketListener = new WebSocketListener() {
+    private final WebSocketListener webSocketListener = new WebSocketListener() {
 
-		@Override
-		public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-		}
+        @Override
+        public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
+        }
 
-		@Override
-		public void onBinaryFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onBinaryFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onBinaryMessage(WebSocket websocket, byte[] binary) throws Exception {
-		}
+        @Override
+        public void onBinaryMessage(WebSocket websocket, byte[] binary) throws Exception {
+        }
 
-		@Override
-		public void onCloseFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onCloseFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-		}
+        @Override
+        public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
+        }
 
-		@Override
-		public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception {
-		}
+        @Override
+        public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception {
+        }
 
-		@Override
-		public void onContinuationFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onContinuationFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
-				WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-			stompConnected = false;
-		}
+        @Override
+        public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
+                WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
+            stompConnected = false;
+        }
 
-		@Override
-		public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-		}
+        @Override
+        public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
+        }
 
-		@Override
-		public void onFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onFrameError(WebSocket websocket, WebSocketException cause, WebSocketFrame frame)
-				throws Exception {
-		}
+        @Override
+        public void onFrameError(WebSocket websocket, WebSocketException cause, WebSocketFrame frame)
+                throws Exception {
+        }
 
-		@Override
-		public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onFrameUnsent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onFrameUnsent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onMessageDecompressionError(WebSocket websocket, WebSocketException cause, byte[] compressed)
-				throws Exception {
-		}
+        @Override
+        public void onMessageDecompressionError(WebSocket websocket, WebSocketException cause, byte[] compressed)
+                throws Exception {
+        }
 
-		@Override
-		public void onMessageError(WebSocket websocket, WebSocketException cause, List<WebSocketFrame> frames)
-				throws Exception {
-		}
+        @Override
+        public void onMessageError(WebSocket websocket, WebSocketException cause, List<WebSocketFrame> frames)
+                throws Exception {
+        }
 
-		@Override
-		public void onPingFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onPingFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onPongFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onPongFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onSendError(WebSocket websocket, WebSocketException cause, WebSocketFrame frame)
-				throws Exception {
-		}
+        @Override
+        public void onSendError(WebSocket websocket, WebSocketException cause, WebSocketFrame frame)
+                throws Exception {
+        }
 
-		@Override
-		public void onSendingFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-		}
+        @Override
+        public void onSendingFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        }
 
-		@Override
-		public void onSendingHandshake(WebSocket websocket, String requestLine, List<String[]> headers)
-				throws Exception {
-		}
+        @Override
+        public void onSendingHandshake(WebSocket websocket, String requestLine, List<String[]> headers)
+                throws Exception {
+        }
 
-		@Override
-		public void onStateChanged(WebSocket websocket, WebSocketState newState) throws Exception {
-		}
+        @Override
+        public void onStateChanged(WebSocket websocket, WebSocketState newState) throws Exception {
+        }
 
-		@Override
-		public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-			StompFrame stompFrame = StompFrame.fromString(frame.getPayloadText());
+        @Override
+        public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+            StompFrame stompFrame = StompFrame.fromString(frame.getPayloadText());
 
-			switch (stompFrame.getCommand()) {
-			case CONNECTED:
-				stompConnected = true;
-				break;
-			case MESSAGE:
-				Integer subscriptionId = Integer
-						.valueOf(stompFrame.getHeaders().get(StompHeader.SUBSCRIPTION.toString()));
+            switch (stompFrame.getCommand()) {
+            case CONNECTED:
+                stompConnected = true;
+                break;
+            case MESSAGE:
+                Integer subscriptionId = Integer
+                        .valueOf(stompFrame.getHeaders().get(StompHeader.SUBSCRIPTION.toString()));
 
-				subscriptions.get(subscriptionId).getListener().onMessage(stompFrame.getBody());
-				break;
-			default:
-				break;
-			}
-		}
+                subscriptions.get(subscriptionId).getListener().onMessage(stompFrame.getBody());
+                break;
+            default:
+                break;
+            }
+        }
 
-		@Override
-		public void onTextMessage(WebSocket websocket, String text) throws Exception {
-		}
+        @Override
+        public void onTextMessage(WebSocket websocket, String text) throws Exception {
+        }
 
-		@Override
-		public void onTextMessageError(WebSocket websocket, WebSocketException cause, byte[] data)
-				throws Exception {
-		}
+        @Override
+        public void onTextMessageError(WebSocket websocket, WebSocketException cause, byte[] data)
+                throws Exception {
+        }
 
-		@Override
-		public void onUnexpectedError(WebSocket websocket, WebSocketException cause) throws Exception {
-		}
-	};
+        @Override
+        public void onUnexpectedError(WebSocket websocket, WebSocketException cause) throws Exception {
+        }
+    };
 }

@@ -26,32 +26,32 @@ package eu.mivrenik.stomp;
  *
  */
 enum StompCommand {
-	CONNECT("CONNECT"),
-	CONNECTED("CONNECTED"),
-	DISCONNECT("DISCONNECT"),
-	ERROR("ERROR"),
-	MESSAGE("MESSAGE"),
-	RECEIPT("RECEIPT"),
-	SEND("SEND"),
-	SUBSCRIBE("SUBSCRIBE"),
-	UNSUBSCRIBE("UNSUBSCRIBE");
+    CONNECT("CONNECT"),
+    CONNECTED("CONNECTED"),
+    DISCONNECT("DISCONNECT"),
+    ERROR("ERROR"),
+    MESSAGE("MESSAGE"),
+    RECEIPT("RECEIPT"),
+    SEND("SEND"),
+    SUBSCRIBE("SUBSCRIBE"),
+    UNSUBSCRIBE("UNSUBSCRIBE");
 
-	private final String value;
+    private final String value;
 
-	public static StompCommand fromValue(String value) {
-		for (StompCommand c : StompCommand.values())
-			if (c.value.equals(value))
-				return c;
+    public static StompCommand fromValue(String value) {
+        for (StompCommand c : StompCommand.values())
+            if (c.value.equals(value))
+                return c;
 
-		throw new IllegalArgumentException("Unknown STOMP command:" + value);
-	}
+        throw new IllegalArgumentException("Unknown STOMP command:" + value);
+    }
 
-	private StompCommand(String value) {
-		this.value = value;
-	}
+    private StompCommand(String value) {
+        this.value = value;
+    }
 
-	@Override
-	public String toString() {
-		return this.value;
-	}
+    @Override
+    public String toString() {
+        return this.value;
+    }
 }

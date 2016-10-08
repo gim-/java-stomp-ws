@@ -26,5 +26,5 @@ package eu.mivrenik.stomp;
  *
  */
 public interface StompMessageListener {
-	void onMessage(String message);
+    void onMessage(String message);
 }
