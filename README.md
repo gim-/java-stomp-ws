@@ -1,6 +1,6 @@
 # STOMP over WebSocket implementation in Java
 
-This is a [STOMP](http://eu.mivrenik.stomp.github.io/) protocol implementation.
+This is a [STOMP](https://stomp.github.io/) protocol implementation.
 
 ## Example backend using Spring Boot
 
