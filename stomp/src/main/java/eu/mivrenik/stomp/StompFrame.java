@@ -27,10 +27,9 @@ import java.util.Map;
 /**
  * STOMP Frame.
  *
- * @link https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames
- *
+ * @link https://eu.mivrenik.stomp.github.io/eu.mivrenik.stomp-specification-1.2.html#STOMP_Frames
  */
-class StompFrame {
+public class StompFrame {
     private StompCommand command;
     private Map<String, String> headers = new HashMap<>();
     private String body;
@@ -47,9 +46,11 @@ class StompFrame {
         this.command = command;
         this.body = body;
 
-        if (headers != null)
-            for (String k : headers.keySet())
+        if (headers != null) {
+            for (String k : headers.keySet()) {
                 this.headers.put(k, headers.get(k));
+            }
+        }
     }
 
     public StompCommand getCommand() {
@@ -67,20 +68,24 @@ class StompFrame {
     public static StompFrame fromString(String data) {
         String[] lines = data.split("\n");
         int pos = 0;
+
         // Ignore empty lines
-        while (pos < lines.length && lines[pos].isEmpty())
+        while (pos < lines.length && lines[pos].isEmpty()) {
             pos++;
+        }
+
         // Command
         StompCommand command = StompCommand.fromValue(lines[pos++]);
+
         // Headers
         Map<String, String> headers = new HashMap<>();
         while (!lines[pos].isEmpty()) {
             String[] keyValue = lines[pos].split(":");
             headers.put(keyValue[0], keyValue[1]);
-
             pos++;
         }
         pos++;
+
         // Body
         StringBuilder body = new StringBuilder();
         for (; pos < lines.length; pos++) {
@@ -109,8 +114,9 @@ class StompFrame {
         }
         sb.append('\n');
         // Body
-        if (body != null)
+        if (body != null) {
             sb.append(body);
+        }
         sb.append('\0');
 
         return sb.toString();

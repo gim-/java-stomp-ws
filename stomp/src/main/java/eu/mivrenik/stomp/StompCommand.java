@@ -22,29 +22,36 @@
 package eu.mivrenik.stomp;
 
 /**
- * STOMP subscription POJO
- *
+ * STOMP commands.
  */
-public class StompSubscription {
-    private final Integer id;
-    private final String destination;
-    private final StompMessageListener listener;
+public enum StompCommand {
+    CONNECT("CONNECT"),
+    CONNECTED("CONNECTED"),
+    DISCONNECT("DISCONNECT"),
+    ERROR("ERROR"),
+    MESSAGE("MESSAGE"),
+    RECEIPT("RECEIPT"),
+    SEND("SEND"),
+    SUBSCRIBE("SUBSCRIBE"),
+    UNSUBSCRIBE("UNSUBSCRIBE");
 
-    public StompSubscription(Integer id, String destination, StompMessageListener listener) {
-        this.id = id;
-        this.destination = destination;
-        this.listener = listener;
+    private final String value;
+
+    public static StompCommand fromValue(String value) {
+        for (StompCommand c : StompCommand.values()) {
+            if (c.value.equals(value)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException("Unknown STOMP command: " + value);
     }
 
-    public Integer getId() {
-        return id;
+    private StompCommand(String value) {
+        this.value = value;
     }
 
-    public String getDestination() {
-        return destination;
-    }
-
-    public StompMessageListener getListener() {
-        return listener;
+    @Override
+    public String toString() {
+        return this.value;
     }
 }

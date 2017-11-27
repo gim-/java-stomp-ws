@@ -23,7 +23,6 @@ package eu.mivrenik.stomp;
 
 /**
  * STOMP message subscription listener interface.
- *
  */
 public interface StompMessageListener {
     void onMessage(String message);

@@ -23,9 +23,8 @@ package eu.mivrenik.stomp;
 
 /**
  * STOMP headers.
- *
  */
-enum StompHeader {
+public enum StompHeader {
     ACCEPT_VERSION("accept-version"),
     CONTENT_LENGTH("content-length"),
     CONTENT_TYPE("content-type"),

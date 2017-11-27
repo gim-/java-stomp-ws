@@ -1,0 +1,15 @@
+group 'eu.mivrenik'
+version '0.1'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':stomp')
+    compile 'com.neovisionaries:nv-websocket-client:1.30'
+}
