@@ -19,11 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eu.mivrenik.stomp;
+package eu.mivrenik.stomp.client.listener;
+
+import eu.mivrenik.stomp.StompFrame;
 
 /**
  * STOMP message subscription listener interface.
  */
 public interface StompMessageListener {
-    void onMessage(String message);
+
+    /**
+     * Subscription message received callback.
+     *
+     * @param stompFrame STOMP message frame
+     */
+    void onMessage(StompFrame stompFrame);
 }

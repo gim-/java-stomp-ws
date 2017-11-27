@@ -34,37 +34,12 @@ public class StompFrame {
     private Map<String, String> headers = new HashMap<>();
     private String body;
 
-    public StompFrame(StompCommand command) {
-        this(command, null, null);
-    }
-
-    public StompFrame(StompCommand command, Map<String, String> headers) {
-        this(command, headers, null);
-    }
-
-    public StompFrame(StompCommand command, Map<String, String> headers, String body) {
-        this.command = command;
-        this.body = body;
-
-        if (headers != null) {
-            for (String k : headers.keySet()) {
-                this.headers.put(k, headers.get(k));
-            }
-        }
-    }
-
-    public StompCommand getCommand() {
-        return command;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
+    /**
+     * Create frame from string.
+     *
+     * @param data Data string
+     * @return STOMP frame instance
+     */
     public static StompFrame fromString(String data) {
         String[] lines = data.split("\n");
         int pos = 0;
@@ -97,6 +72,37 @@ public class StompFrame {
         }
 
         return new StompFrame(command, headers, body.toString());
+    }
+
+    public StompFrame(StompCommand command) {
+        this(command, null, null);
+    }
+
+    public StompFrame(StompCommand command, Map<String, String> headers) {
+        this(command, headers, null);
+    }
+
+    public StompFrame(StompCommand command, Map<String, String> headers, String body) {
+        this.command = command;
+        this.body = body;
+
+        if (headers != null) {
+            for (String k : headers.keySet()) {
+                this.headers.put(k, headers.get(k));
+            }
+        }
+    }
+
+    public StompCommand getCommand() {
+        return command;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getBody() {
+        return body;
     }
 
     @Override

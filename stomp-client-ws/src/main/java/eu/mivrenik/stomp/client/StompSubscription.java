@@ -19,7 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eu.mivrenik.stomp;
+package eu.mivrenik.stomp.client;
+
+import eu.mivrenik.stomp.client.listener.StompMessageListener;
 
 /**
  * STOMP subscription POJO
